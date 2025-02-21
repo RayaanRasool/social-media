@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Input Page</title>
+    <title>Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -19,7 +19,6 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            position: relative;
         }
         input {
             padding: 10px;
@@ -28,24 +27,19 @@
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-        .toggle {
-            cursor: pointer;
-            margin-left: -30px;
-        }
         button {
             padding: 10px 15px;
-            background: #28a745;
+            background: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
         button:hover {
-            background: #218838;
+            background: #0056b3;
         }
         .create-account {
             margin-top: 10px;
-            font-size: 14px;
         }
         .create-account a {
             color: #007bff;
@@ -53,12 +47,6 @@
         }
         .create-account a:hover {
             text-decoration: underline;
-        }
-        .error-message {
-            color: red;
-            font-size: 14px;
-            margin-top: 10px;
-            display: none;
         }
     </style>
 </head>
@@ -70,43 +58,27 @@
         </div>
         <div>
             <input type="password" id="password" placeholder="Enter password">
-            <span class="toggle" onclick="togglePassword()">👁️</span>
         </div>
-        <button onclick="submitDetails()">Submit</button>
-        <p class="error-message" id="error-message">Incorrect username or password. Please try again.</p>
+        <button onclick="login()">Login</button>
+        <p id="error-message" style="color: red;"></p>
         <div class="create-account">
-            <div>Don't account?</div>
-            <a href="create_account.html">Create an account</a>
+            <p>Don't have an account? <a href="create_account.html">Create one</a></p>
         </div>
     </div>
 
     <script>
-        function togglePassword() {
-            let passwordField = document.getElementById("password");
-            if (passwordField.type === "password") {
-                passwordField.type = "text";
-            } else {
-                passwordField.type = "password";
-            }
-        }
-
-        function submitDetails() {
+        function login() {
             let username = document.getElementById("username").value;
             let password = document.getElementById("password").value;
-            let errorMessage = document.getElementById("error-message");
+            let users = JSON.parse(localStorage.getItem("users")) || [];
 
-            let savedUsername = localStorage.getItem("savedUsername");
-            let savedPassword = localStorage.getItem("savedPassword");
+            let validUser = users.find(user => user.username === username && user.password === password);
 
-            if (username.trim() === "") {
-                alert("Username cannot be empty.");
-                return;
-            }
-            
-            if (username === savedUsername && password === savedPassword) {
-                window.location.href = "language_selection.html";
+            if (validUser) {
+                alert("Congratulations! You have successfully logged in.");
+                window.location.href = "language_selection.html"; // Redirect to language selection
             } else {
-                errorMessage.style.display = "block";
+                document.getElementById("error-message").textContent = "Incorrect username or password.";
             }
         }
     </script>
