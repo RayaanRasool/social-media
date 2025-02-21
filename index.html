@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Input Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+        input {
+            padding: 10px;
+            width: 250px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .toggle {
+            cursor: pointer;
+            margin-left: -30px;
+        }
+        button {
+            padding: 10px 15px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .create-account {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .create-account a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .create-account a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <div>
+            <input type="text" id="username" placeholder="Enter username">
+        </div>
+        <div>
+            <input type="password" id="password" placeholder="Enter password">
+            <span class="toggle" onclick="togglePassword()">👁️</span>
+        </div>
+        <button onclick="submitDetails()">Submit</button>
+        <p class="error-message" id="error-message">Incorrect username or password. Please try again.</p>
+        <div class="create-account">
+            <div>Don't account?</div>
+            <a href="create_account.html">Create an account</a>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            let passwordField = document.getElementById("password");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        }
+
+        function submitDetails() {
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+            let errorMessage = document.getElementById("error-message");
+
+            let savedUsername = localStorage.getItem("savedUsername");
+            let savedPassword = localStorage.getItem("savedPassword");
+
+            if (username.trim() === "") {
+                alert("Username cannot be empty.");
+                return;
+            }
+            
+            if (username === savedUsername && password === savedPassword) {
+                window.location.href = "language_selection.html";
+            } else {
+                errorMessage.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>
