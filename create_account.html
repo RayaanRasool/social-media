@@ -19,7 +19,6 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            position: relative;
         }
         input {
             padding: 10px;
@@ -63,8 +62,18 @@
                 return;
             }
 
-            localStorage.setItem("savedUsername", newUsername);
-            localStorage.setItem("savedPassword", newPassword);
+            // Retrieve existing users or initialize an empty array
+            let users = JSON.parse(localStorage.getItem("users")) || [];
+
+            // Check if the username already exists
+            if (users.some(user => user.username === newUsername)) {
+                alert("Username already exists. Please choose a different one.");
+                return;
+            }
+
+            // Add the new user without overwriting existing users
+            users.push({ username: newUsername, password: newPassword });
+            localStorage.setItem("users", JSON.stringify(users));
             alert("Account created successfully! You can now log in.");
             window.location.href = "index.html"; // Redirect to login page
         }
