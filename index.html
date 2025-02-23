@@ -3,66 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Super Smooth Expanding Login</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            overflow: hidden;
         }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+        /* Small Glowing Circle */
+        .box {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            text-align: center;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); /* Smoother Expansion */
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: scale(1);
+        }
+
+        /* 🔥 Smooth Expanding Effect */
+        .box:hover {
+            width: 350px;
+            height: auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 25px #00eaff, 0 0 50px #0088cc;
+            background: rgba(255, 255, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transform: scale(1.05);
+        }
+
+        /* "Login" text centered initially */
+        .login-text {
+            color: #00eaff;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.4s ease-in-out;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 1;
+        }
+
+        /* Hide "Login" text on hover */
+        .box:hover .login-text {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        /* Fade-in effect for login content */
+        .login-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-in-out, transform 0.6s ease-in-out;
+            width: 100%;
             text-align: center;
         }
-        input {
-            padding: 10px;
-            width: 250px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+
+        /* Appear smoothly on hover */
+        .box:hover .login-content {
+            opacity: 1;
+            transform: translateY(0);
         }
+
+        h2 {
+            color: #00eaff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 12px;
+            width: 100%;
+            margin: 10px 0;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        input:focus {
+            border-color: #00eaff;
+            box-shadow: 0 0 10px #00eaff;
+        }
+
         button {
-            padding: 10px 15px;
-            background: #007bff;
+            padding: 12px;
+            width: 100%;
+            background: #00eaff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
         }
+
         button:hover {
-            background: #0056b3;
+            background: #0088cc;
+            box-shadow: 0 0 10px #00eaff;
         }
+
         .create-account {
             margin-top: 10px;
         }
+
         .create-account a {
-            color: #007bff;
+            color: #00eaff;
             text-decoration: none;
+            font-weight: bold;
         }
+
         .create-account a:hover {
             text-decoration: underline;
+        }
+
+        #error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Login</h2>
-        <div>
+
+    <div class="box">
+        <div class="login-text">Login</div>
+        <div class="login-content">
+            <h2>Login</h2>
             <input type="text" id="username" placeholder="Enter username">
-        </div>
-        <div>
             <input type="password" id="password" placeholder="Enter password">
-        </div>
-        <button onclick="login()">Login</button>
-        <p id="error-message" style="color: red;"></p>
-        <div class="create-account">
-            <p>Don't have an account? <a href="create_account.html">Create one</a></p>
+            <button onclick="login()">Login</button>
+            <p id="error-message"></p>
+            <div class="create-account">
+                <p>Don't have an account? <a href="create_account.html">Create one</a></p>
+            </div>
         </div>
     </div>
 
@@ -76,11 +177,12 @@
 
             if (validUser) {
                 alert("Congratulations! You have successfully logged in.");
-                window.location.href = "language_selection.html"; // Redirect to language selection
+                window.location.href = "language_selection.html"; // Redirect to next page
             } else {
                 document.getElementById("error-message").textContent = "Incorrect username or password.";
             }
         }
     </script>
+
 </body>
 </html>
