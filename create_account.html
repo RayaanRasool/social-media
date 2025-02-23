@@ -3,32 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account</title>
+    <title>Sign Up</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
         body {
-            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            overflow: hidden;
         }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        .box {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            text-align: center;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .box:hover {
+            width: 450px;
+            height: auto;
+            padding: 30px;
+            box-shadow: 0 0 30px #00eaff, 0 0 60px #0088cc;
+            background: rgba(255, 255, 255, 0.2);
+            flex-direction: column;
+        }
+        .create-text {
+            color: #00eaff;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.4s ease-in-out;
+            position: absolute;
+            opacity: 1;
+        }
+        .box:hover .create-text {
+            opacity: 0;
+        }
+        .create-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
+            width: 100%;
             text-align: center;
         }
+        .box:hover .create-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        h2 {
+            color: #00eaff;
+            margin-bottom: 15px;
+        }
         input {
-            padding: 10px;
-            width: 250px;
+            padding: 12px;
+            width: 100%;
             margin: 10px 0;
-            border: 1px solid #ccc;
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            outline: none;
+            text-align: center;
         }
         button {
-            padding: 10px 15px;
+            padding: 12px;
+            width: 100%;
             background: #28a745;
             color: white;
             border: none;
@@ -37,45 +91,87 @@
         }
         button:hover {
             background: #218838;
+            box-shadow: 0 0 15px #28a745;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            text-align: left;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Create an Account</h2>
-        <div>
-            <input type="text" id="new-username" placeholder="Enter new username">
+    <div class="box">
+        <div class="create-text">Create</div>
+        <div class="create-content">
+            <h2>Sign Up</h2>
+            <input type="text" id="new-username" placeholder="Username">
+            <div id="username-error" class="error-message"></div>
+            <input type="password" id="new-password" placeholder="Password">
+            <div id="password-error" class="error-message"></div>
+            <input type="password" id="confirm-password" placeholder="Confirm Password">
+            <div id="confirm-password-error" class="error-message"></div>
+            <input type="email" id="email" placeholder="Email">
+            <div id="email-error" class="error-message"></div>
+            <input type="date" id="dob">
+            <div id="dob-error" class="error-message"></div>
+            <input type="checkbox" id="terms"> Accept Terms & Conditions
+            <div id="terms-error" class="error-message"></div>
+            <button onclick="createAccount(event)">Sign Up</button>
         </div>
-        <div>
-            <input type="password" id="new-password" placeholder="Enter new password">
-        </div>
-        <button onclick="createAccount()">Create Account</button>
     </div>
 
     <script>
-        function createAccount() {
-            let newUsername = document.getElementById("new-username").value;
-            let newPassword = document.getElementById("new-password").value;
+        function createAccount(event) {
+            event.preventDefault();
+            let valid = true;
 
-            if (newUsername.trim() === "" || newPassword.trim() === "") {
-                alert("Username and password cannot be empty.");
-                return;
+            function showError(id, message) {
+                document.getElementById(id).textContent = message;
+                valid = false;
             }
 
-            // Retrieve existing users or initialize an empty array
-            let users = JSON.parse(localStorage.getItem("users")) || [];
-
-            // Check if the username already exists
-            if (users.some(user => user.username === newUsername)) {
-                alert("Username already exists. Please choose a different one.");
-                return;
+            function clearErrors() {
+                document.querySelectorAll(".error-message").forEach(e => e.textContent = "");
             }
 
-            // Add the new user without overwriting existing users
-            users.push({ username: newUsername, password: newPassword });
-            localStorage.setItem("users", JSON.stringify(users));
-            alert("Account created successfully! You can now log in.");
-            window.location.href = "index.html"; // Redirect to login page
+            clearErrors();
+
+            let username = document.getElementById("new-username").value.trim();
+            let password = document.getElementById("new-password").value;
+            let confirmPassword = document.getElementById("confirm-password").value;
+            let email = document.getElementById("email").value.trim();
+            let dob = document.getElementById("dob").value;
+            let terms = document.getElementById("terms").checked;
+
+            if (!username) showError("username-error", "Username is required");
+            if (!password.match(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)) {
+                showError("password-error", "Password must be at least 8 characters, include an uppercase letter, a number, and a special character.");
+            }
+            if (password !== confirmPassword) showError("confirm-password-error", "Passwords do not match");
+            if (!email.match(/^\S+@\S+\.\S+$/)) showError("email-error", "Invalid email format");
+            if (!dob || new Date(dob) > new Date(new Date().setFullYear(new Date().getFullYear() - 13))) {
+                showError("dob-error", "You must be at least 13 years old");
+            }
+            if (!terms) showError("terms-error", "You must accept the terms and conditions");
+
+            if (valid) {
+                let users = JSON.parse(localStorage.getItem("users")) || [];
+
+                // Check if username already exists
+                if (users.some(user => user.username === username)) {
+                    showError("username-error", "Username already exists");
+                    return;
+                }
+
+                let user = { username, password, email, dob };
+                users.push(user);
+                localStorage.setItem("users", JSON.stringify(users));
+
+                alert("Account created successfully!");
+                window.location.href = 'index.html';  // Redirect to login page
+            }
         }
     </script>
 </body>
